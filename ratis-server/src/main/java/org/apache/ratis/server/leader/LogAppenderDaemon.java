@@ -59,10 +59,18 @@ class LogAppenderDaemon {
   }
 
   public void tryToStart() {
-    if (lifeCycle.compareAndTransition(NEW, STARTING)) {
+    State state = lifeCycle.transitionAndGet(TRY_TO_START);
+    if (state == CLOSED || state == STARTING) {
       daemon.start();
     }
   }
+
+  static final UnaryOperator<State> TRY_TO_START = current -> {
+    if (current == NEW) {
+      return STARTING;
+    }
+    return current;
+  };
 
   static final UnaryOperator<State> TRY_TO_RUN = current -> {
     if (current == STARTING) {
