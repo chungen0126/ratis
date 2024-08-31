@@ -802,6 +802,8 @@ class LeaderStateImpl implements LeaderState {
         && follower.hasAttemptedToInstallSnapshot()) {
       return BootStrapProgress.CAUGHTUP;
     } else {
+      LOG.debug("{} detects a follower {} progressing for bootstrapping", this, follower);
+      Arrays.stream(Thread.currentThread().getStackTrace()).forEach(e -> LOG.debug(e.toString()));
       return BootStrapProgress.PROGRESSING;
     }
   }
