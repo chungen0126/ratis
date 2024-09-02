@@ -515,7 +515,12 @@ class LeaderStateImpl implements LeaderState {
 
       // set the staging state
       stagingState = configurationStagingState;
-
+      StringBuilder sb = new StringBuilder();
+      Arrays.stream(Thread.currentThread().getStackTrace()).forEach(e -> {
+        sb.append(e);
+        sb.append("\n");
+      });
+      LOG.debug("finish setting the staging state \n{}", sb);
       newAppenders.forEach(LogAppender::start);
     }
 
