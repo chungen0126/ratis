@@ -170,7 +170,8 @@ class FollowerInfoImpl implements FollowerInfo {
     return name + "(c" + getCommitIndex() + ",m" + getMatchIndex() + ",n" + getNextIndex()
         + ", caughtUp=" + caughtUp +
         ", lastRpcSendTime=" + lastRpcSendTime.get().elapsedTimeMs() +
-        ", lastRpcResponseTime=" + lastRpcResponseTime.get().elapsedTimeMs() + ")";
+        ", lastRpcResponseTime=" + lastRpcResponseTime.get().elapsedTimeMs() +
+        ", ackInstallSnapshotAttempt=" + ackInstallSnapshotAttempt + ")";
   }
 
   void catchUp() {
