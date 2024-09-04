@@ -245,6 +245,7 @@ public class GrpcLogAppender extends LogAppenderBase {
     } else {
       // check installSnapshotNotification
       final TermIndex firstAvailable = shouldNotifyToInstallSnapshot();
+      LOG.debug("firstAvailable = {}", firstAvailable);
       if (firstAvailable != null) {
         notifyInstallSnapshot(firstAvailable);
         return true;
@@ -257,7 +258,11 @@ public class GrpcLogAppender extends LogAppenderBase {
   public void run() throws IOException {
     for(; isRunning(); mayWait()) {
       //HB period is expired OR we have messages OR follower is behind with commit index
-      if (shouldSendAppendEntries() || isFollowerCommitBehindLastCommitIndex()) {
+      final boolean shouldAppend = shouldSendAppendEntries() ;
+      final boolean isFollowerCommitBehindLastCommitIndex = isFollowerCommitBehindLastCommitIndex();
+      if (shouldAppend || isFollowerCommitBehindLastCommitIndex) {
+        LOG.debug("shouldAppend = {}, isFollowerCommitBehindLastCommitIndex = {}" ,
+            shouldAppend, isFollowerCommitBehindLastCommitIndex);
         final boolean installingSnapshot = installSnapshot();
         appendLog(installingSnapshot || haveTooManyPendingRequests());
       }
