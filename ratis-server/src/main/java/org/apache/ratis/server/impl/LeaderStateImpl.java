@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
@@ -846,19 +847,23 @@ class LeaderStateImpl implements LeaderState {
           .map(follower -> checkProgress(follower, commitIndex))
           .collect(Collectors.toCollection(() -> EnumSet.noneOf(BootStrapProgress.class)));
       if (reports.contains(BootStrapProgress.NOPROGRESS)) {
+        LOG.debug("timeout");
         stagingState.fail(BootStrapProgress.NOPROGRESS);
       } else if (!reports.contains(BootStrapProgress.PROGRESSING)) {
         // all caught up!
+        LOG.debug("not progressing");
         applyOldNewConf(stagingState);
         this.stagingState = null;
         laggingFollowers.stream()
             .filter(f -> server.getRaftConf().containsInConf(f.getId()))
             .forEach(FollowerInfoImpl::catchUp);
       }
+      LOG.debug("progressing");
     }
   }
 
   boolean isBootStrappingPeer(RaftPeerId peerId) {
+    LOG.debug("stagingState = {}", stagingState);
     return Optional.ofNullable(stagingState).map(s -> s.contains(peerId)).orElse(false);
   }
 
@@ -1271,7 +1276,36 @@ class LeaderStateImpl implements LeaderState {
 
     @Override
     public String toString() {
-      return name;
+      StringBuilder sb = new StringBuilder();
+      sb.append("name: ")
+          .append(name)
+          .append("\n")
+          .append("newPeers = [");
+      Iterator<RaftPeerId> peerIdit = newPeers.keySet().iterator();
+      while (peerIdit != null && peerIdit.hasNext()) {
+        RaftPeerId peerId = peerIdit.next();
+        if (!peerIdit.hasNext()) {
+          sb.append(peerId.toString())
+              .append("]");
+        } else {
+          sb.append(peerId.toString())
+              .append(", ");
+        }
+      }
+      sb.append("\n")
+          .append("newListeners = [");
+      Iterator<RaftPeerId> listenerIt = newListeners.keySet().iterator();
+      while (listenerIt != null && listenerIt.hasNext()) {
+        RaftPeerId peerId = peerIdit.next();
+        if (!listenerIt.hasNext()) {
+          sb.append(peerId.toString())
+              .append("]");
+        } else {
+          sb.append(peerId.toString())
+              .append(", ");
+        }
+      }
+      return sb.toString();
     }
   }
 
