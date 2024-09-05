@@ -25,6 +25,7 @@ import org.apache.ratis.server.raftlog.RaftLog;
 import org.apache.ratis.server.raftlog.RaftLogIndex;
 import org.apache.ratis.util.Timestamp;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.LongUnaryOperator;
@@ -191,6 +192,12 @@ class FollowerInfoImpl implements FollowerInfo {
   public RaftPeer getPeer() {
     final RaftPeer newPeer = getPeer.apply(getId());
     if (newPeer != null) {
+      StringBuilder sb = new StringBuilder();
+      Arrays.stream(Thread.currentThread().getStackTrace()).forEach(e -> {
+        sb.append(e);
+        sb.append("\n");
+      });
+      LOG.debug("set new peer:\n{}", sb);
       peer.set(newPeer);
       return newPeer;
     } else {
