@@ -839,6 +839,7 @@ public class GrpcLogAppender extends LogAppenderBase {
     final long leaderStartIndex = getRaftLog().getStartIndex();
     final TermIndex firstAvailable = Optional.ofNullable(getRaftLog().getTermIndex(leaderStartIndex))
         .orElseGet(() -> TermIndex.valueOf(getServer().getInfo().getCurrentTerm(), leaderNextIndex));
+    LOG.debug("isFollowerBootstrapping = {}", isFollowerBootstrapping);
     if (isFollowerBootstrapping && !follower.hasAttemptedToInstallSnapshot()) {
       // If the follower is bootstrapping and has not yet installed any snapshot from leader, then the follower should
       // be notified to install a snapshot. Every follower should try to install at least one snapshot during
@@ -849,6 +850,7 @@ public class GrpcLogAppender extends LogAppenderBase {
 
     final long followerNextIndex = follower.getNextIndex();
     if (followerNextIndex >= leaderNextIndex) {
+      LOG.debug("followerNextIndex = {}, leaderNextIndex = {}", followerNextIndex, leaderNextIndex);
       return null;
     }
 

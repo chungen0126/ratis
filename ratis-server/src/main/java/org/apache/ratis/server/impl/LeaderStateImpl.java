@@ -863,7 +863,7 @@ class LeaderStateImpl implements LeaderState {
   }
 
   boolean isBootStrappingPeer(RaftPeerId peerId) {
-    LOG.debug("stagingState = {}", stagingState);
+    LOG.debug("peerId = {}, stagingState = {}", peerId, stagingState);
     return Optional.ofNullable(stagingState).map(s -> s.contains(peerId)).orElse(false);
   }
 
@@ -1282,7 +1282,7 @@ class LeaderStateImpl implements LeaderState {
           .append("\n")
           .append("newPeers = [");
       Iterator<RaftPeerId> peerIdit = newPeers.keySet().iterator();
-      while (peerIdit != null && peerIdit.hasNext()) {
+      while (peerIdit.hasNext()) {
         RaftPeerId peerId = peerIdit.next();
         if (!peerIdit.hasNext()) {
           sb.append(peerId.toString())
@@ -1295,7 +1295,7 @@ class LeaderStateImpl implements LeaderState {
       sb.append("\n")
           .append("newListeners = [");
       Iterator<RaftPeerId> listenerIt = newListeners.keySet().iterator();
-      while (listenerIt != null && listenerIt.hasNext()) {
+      while (listenerIt.hasNext()) {
         RaftPeerId peerId = peerIdit.next();
         if (!listenerIt.hasNext()) {
           sb.append(peerId.toString())
