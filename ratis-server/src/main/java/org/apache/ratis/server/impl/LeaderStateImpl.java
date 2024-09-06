@@ -60,6 +60,7 @@ import org.apache.ratis.util.TimeDuration;
 import org.apache.ratis.util.Timestamp;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -215,11 +216,32 @@ class LeaderStateImpl implements LeaderState {
           CollectionUtils.as(senders, LogAppender::getFollowerId),
           CollectionUtils.as(newSenders, LogAppender::getFollowerId));
 
+      StringBuilder sb = new StringBuilder();
+      Iterator<LogAppender> sendersIterator = newSenders.iterator();
+      while (sendersIterator.hasNext()) {
+        LogAppender sender = sendersIterator.next();
+        sb.append(sender.getFollower().getId());
+        if (!sendersIterator.hasNext()) {
+          sb.append(", ");
+        }
+      }
+      LOG.debug("senders: [{}]", sb);
+
       final boolean changed = senders.addAll(newSenders);
       Preconditions.assertTrue(changed);
     }
 
     boolean removeAll(Collection<LogAppender> c) {
+      StringBuilder sb = new StringBuilder();
+      Iterator<LogAppender> sendersIterator = c.iterator();
+      while (sendersIterator.hasNext()) {
+        LogAppender sender = sendersIterator.next();
+        sb.append(sender.getFollower().getId());
+        if (!sendersIterator.hasNext()) {
+          sb.append(", ");
+        }
+      }
+      LOG.debug("senders: [{}]", sb);
       return senders.removeAll(c);
     }
 
