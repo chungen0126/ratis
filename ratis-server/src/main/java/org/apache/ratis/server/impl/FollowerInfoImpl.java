@@ -198,7 +198,7 @@ class FollowerInfoImpl implements FollowerInfo {
         sb.append("\n");
       });
       RaftPeer oldPeer = peer.getAndSet(newPeer);
-      LOG.debug("oldPeer = {}, newPeer = {}, \nset new peer:\n{}", oldPeer.getId(), newPeer.getId(), sb);
+      LOG.debug("oldPeer = {}, newPeer = {}, \nset new peer:\n{}", oldPeer.getId().toString(), newPeer.getId().toString(), sb);
       return newPeer;
     } else {
       return peer.get();
