@@ -386,6 +386,7 @@ public class GrpcLogAppender extends LogAppenderBase {
   private void appendLog(boolean heartbeat) throws IOException {
     final AppendEntriesRequestProto pending;
     final AppendEntriesRequest request;
+    LOG.debug("start appendLog.");
     try (AutoCloseableLock writeLock = lock.writeLock(caller, LOG::trace)) {
       // Prepare and send the append request.
       // Note changes on follower's nextIndex and ops on pendingRequests should always be done under the write-lock
@@ -825,6 +826,7 @@ public class GrpcLogAppender extends LogAppenderBase {
         Thread.currentThread().interrupt();
       }
     }
+    LOG.debug("finished notifyInstallSnapshot");
   }
 
   /**
