@@ -639,6 +639,7 @@ public class GrpcLogAppender extends LogAppenderBase {
     }
 
     void close() {
+      LOG.debug("close");
       done.set(true);
       notifyLogAppender();
     }
@@ -821,6 +822,7 @@ public class GrpcLogAppender extends LogAppenderBase {
 
     while (isRunning() && !responseHandler.isDone()) {
       try {
+        LOG.debug("isRunning = {}, isDone = {}", isRunning(), responseHandler.isDone());
         getEventAwaitForSignal().await();
       } catch (InterruptedException ignored) {
         Thread.currentThread().interrupt();

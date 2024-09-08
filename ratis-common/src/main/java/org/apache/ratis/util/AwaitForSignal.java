@@ -17,6 +17,9 @@
  */
 package org.apache.ratis.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -31,6 +34,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * This class is threadsafe.
  */
 public class AwaitForSignal {
+  private final static Logger LOG = LoggerFactory.getLogger(AwaitForSignal.class);
   private final String name;
   private final Lock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();
@@ -45,6 +49,7 @@ public class AwaitForSignal {
     lock.lock();
     try {
       for (final AtomicBoolean s = signaled.get(); !s.get(); ) {
+        LOG.debug("signal = {}", s.get());
         condition.await();
       }
     } finally {
@@ -72,6 +77,7 @@ public class AwaitForSignal {
   public void signal() {
     lock.lock();
     try {
+      LOG.debug("signal");
       signaled.getAndSet(new AtomicBoolean()).set(true);
       condition.signalAll();
     } finally {
