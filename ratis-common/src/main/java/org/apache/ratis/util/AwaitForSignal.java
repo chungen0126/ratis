@@ -92,7 +92,7 @@ public class AwaitForSignal {
         return true;
       }
       if (condition.await(time, unit)) {
-        return supplier.get();
+        return supplier.get().booleanValue();
       }
       return false;
     } finally {
