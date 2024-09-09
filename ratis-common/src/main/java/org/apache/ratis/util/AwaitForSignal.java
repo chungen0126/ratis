@@ -81,20 +81,17 @@ public class AwaitForSignal {
     }
   }
 
-  public <T extends Boolean> boolean await(long time, TimeUnit unit, Supplier<T> supplier)
+  public <T extends Boolean> boolean await(Supplier<T> supplier)
       throws InterruptedException {
-    if (time <= 0) {
-      return false;
-    }
     lock.lock();
     try {
       if (supplier.get().booleanValue()) {
         return true;
       }
-      if (condition.await(time, unit)) {
-        return supplier.get().booleanValue();
+      for (final AtomicBoolean s = signaled.get(); !s.get(); ) {
+        condition.await();
       }
-      return false;
+      return supplier.get().booleanValue();
     } finally {
       lock.unlock();
     }

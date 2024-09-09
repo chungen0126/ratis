@@ -778,7 +778,7 @@ public class GrpcLogAppender extends LogAppenderBase {
     boolean isDone = false;
     while (isRunning() && !isDone) {
       try {
-        isDone = getEventAwaitForSignal().await(getWaitTimeMs(), TimeUnit.MILLISECONDS, responseHandler::isDone);
+        isDone = getEventAwaitForSignal().await(responseHandler::isDone);
       } catch (InterruptedException ignored) {
         Thread.currentThread().interrupt();
       }
@@ -824,7 +824,7 @@ public class GrpcLogAppender extends LogAppenderBase {
     boolean isDone = false;
     while (isRunning()&& !isDone) {
       try {
-        isDone = getEventAwaitForSignal().await(getWaitTimeMs(), TimeUnit.MILLISECONDS, responseHandler::isDone);
+        isDone = getEventAwaitForSignal().await(responseHandler::isDone);
       } catch (InterruptedException ignored) {
         Thread.currentThread().interrupt();
       }
