@@ -91,10 +91,10 @@ public class AwaitForSignal {
       if (supplier.get().booleanValue()) {
         return true;
       }
-      if (signaled.get().get()) {
-        return true;
+      if (condition.await(time, unit)) {
+        return supplier.get();
       }
-      return condition.await(time, unit);
+      return false;
     } finally {
       lock.unlock();
     }
