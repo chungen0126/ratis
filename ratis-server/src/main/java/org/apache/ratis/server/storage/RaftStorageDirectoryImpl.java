@@ -188,7 +188,7 @@ class RaftStorageDirectoryImpl implements RaftStorageDirectory {
    *
    * @throws IOException if locking fails
    */
-  void lock() throws IOException {
+  synchronized void lock() throws IOException {
     final File lockF = new File(root, IN_USE_LOCK_NAME);
     final FileLock newLock = FileUtils.attempt(() -> tryLock(lockF), () -> "tryLock " + lockF);
     if (newLock == null) {
@@ -252,7 +252,7 @@ class RaftStorageDirectoryImpl implements RaftStorageDirectory {
   /**
    * Unlock storage.
    */
-  void unlock() throws IOException {
+  synchronized void unlock() throws IOException {
     if (this.lock == null) {
       return;
     }
