@@ -134,6 +134,7 @@ public class RaftStorageImpl implements RaftStorage {
   @Override
   public void close() throws IOException {
     storageDir.unlock();
+    LOG.info("Unlock {}", storageDir.getRoot());
   }
 
   @Override

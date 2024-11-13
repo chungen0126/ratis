@@ -530,6 +530,7 @@ public final class SegmentedRaftLog extends RaftLogBase {
     }
     fileLogWorker.close();
     storage.close();
+    LOG.info("closed raft log storage {}", storage);
     getRaftLogMetrics().unregister();
   }
 

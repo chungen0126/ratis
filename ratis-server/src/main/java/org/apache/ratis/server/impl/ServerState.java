@@ -432,6 +432,7 @@ class ServerState {
     try {
       if (log.isInitialized()) {
         getLog().close();
+        LOG.info("closed raftLog");
       }
     } catch (Throwable e) {
       LOG.warn(getMemberId() + ": Failed to close raft log " + getLog(), e);
@@ -440,6 +441,7 @@ class ServerState {
     try {
       if (raftStorage.isInitialized()) {
         getStorage().close();
+        LOG.info("closed raft storage {}", getStorage().toString());
       }
     } catch (Throwable e) {
       LOG.warn(getMemberId() + ": Failed to close raft storage " + getStorage(), e);

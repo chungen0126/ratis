@@ -520,6 +520,7 @@ class RaftServerImpl implements RaftServer.Division,
       }
       try{
         state.close();
+        LOG.info("{}: Closed ServerState", getMemberId());
       } catch (Exception e) {
         LOG.warn("{}: Failed to close state", getMemberId(), e);
       }
