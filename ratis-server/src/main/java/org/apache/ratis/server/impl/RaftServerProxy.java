@@ -510,6 +510,7 @@ class RaftServerProxy implements RaftServer {
             final boolean started = newImpl.start();
             Preconditions.assertTrue(started, () -> getId()+ ": failed to start a new impl: " + newImpl);
           } catch (IOException e) {
+            newImpl.close();
             throw new CompletionException(e);
           }
           return newImpl.newSuccessReply(request);
